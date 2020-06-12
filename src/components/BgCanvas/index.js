@@ -1,6 +1,4 @@
 /*
- * @Author: liubo
- * @CreatDate: 2018-09-30 17:13:02
  * @Describe: canvas背景特效
  */
 

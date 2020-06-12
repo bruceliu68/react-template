@@ -1,6 +1,6 @@
 export default {
 	state: {
-		count: 0
+		homeCount: 1
 	},
 	effects: {
 

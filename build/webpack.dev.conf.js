@@ -20,14 +20,7 @@ module.exports = merge(baseWebpackConfig, {
 		open: config.dev.autoOpenBrowser,
 		proxy: config.dev.proxyTable || {},
 		hot: true,
-		historyApiFallback: {
-			rewrites: [
-				{
-					from: /!^\/api/g,
-					to: "/"
-				}
-			]
-		},
+		historyApiFallback: true,
 		disableHostCheck: true
 	},
 	devtool: config.dev.devtool,
@@ -38,7 +31,9 @@ module.exports = merge(baseWebpackConfig, {
 			filename: "index.html",
 			template: config.common.htmlTemplatePath,	// 配置html模板的地址
 			inject: true,
-			chunksSortMode: "none"
+			chunksSortMode: "none",
+			dllPath: "/vendor",
+			publicPath: config.dev.assetsPublicPath
 		})
 	],
 	optimization: {

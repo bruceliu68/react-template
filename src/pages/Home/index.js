@@ -1,45 +1,53 @@
 /*
- * @Author: liubo
- * @CreatDate: 2018-09-30 17:13:02
  * @Describe: 测试首页
  */
 
 import "./index.less";
-import React, { PureComponent } from "react";
-import BgCanvas from "@/components/BgCanvas";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Button } from "antd";
 
-class Home extends PureComponent {
+const Home = props => {
+	const { globalStore, homeStore } = props;
 
-	componentDidMount() {
+	useEffect(() => {
+		init();
+	}, []);
+
+	const init = () => {
 		dispatch({
-			type: "global/changeState",
+			type: "global/updateState",
 			payload: {
 				count: 2
 			}
 		});
-	}
+		dispatch({
+			type: "home/updateState",
+			payload: {
+				homeCount: 2
+			}
+		});
+	};
 
-	render() {
-		const { globalState } = this.props;
-
-		return (
-			<div className="g-home">
-				<div className="wrap">
-					<img className="pic" src={require("./img/mypic.jpeg")} alt="" />
-					<label className="title">TDS-PRO</label>
-					<div className="txt">欢迎参观我的网站</div>
-					store中取过来的数据：{globalState.count}
-				</div>
-				<div className="copyright">Copyright @2019 Bruceliu出品</div>
-				<BgCanvas />
+	return (
+		<div className="g-home">
+			<div className="wrap">
+				<img className="pic" src={require("./img/mypic.jpeg")} alt="" />
+				<label className="title">DEMO</label>
+				<div className="txt">欢迎参观我的网站</div>
+				globalStore中取过来的数据：{globalStore.count}<br />
+				homeStore中取过来的数据：{homeStore.homeCount}<br />
+				<Button>测试antd组件</Button>
 			</div>
-		);
-	}
-}
+			<div className="copyright">Copyright @2019 Bruceliu出品</div>
+		</div>
+	);
+};
 
 const mapStateToProps = (state) => ({
-	globalState: state.global
+	globalStore: state.global,
+	homeStore: state.home
 });
 
 export default connect(mapStateToProps)(Home);
+

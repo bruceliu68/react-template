@@ -1,8 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const config = require("./config");
-const outpath = `../public/${config.common.sourcePrefix}/vendor`;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const outpath = "../public/vendor";
 
 const vendors = [
 	"react",
@@ -16,7 +15,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, outpath),
-		filename: "[name]_dll.js",
+		filename: "[name].js",
 		library: "[name]_library"
 	},
 	plugins: [
@@ -26,7 +25,7 @@ module.exports = {
 			context: __dirname
 		})
 		// new BundleAnalyzerPlugin({
-		// 	analyzerMode: "static"
+		// 	analyzerMode: 'static'
 		// })
 	],
 	devtool: false

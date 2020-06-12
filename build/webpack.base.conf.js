@@ -5,9 +5,9 @@ const config = require("./config");
 const utils = require("./utils");
 const devMode = process.env.SYS_ENV !== "production";
 
-function resolve(dir) {
+const resolve = dir => {
 	return path.join(__dirname, "..", dir);
-}
+};
 
 module.exports = {
 	cache: true,
@@ -15,10 +15,23 @@ module.exports = {
 	entry: {
 		app: "./src/main.js"
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				antdUI: {
+					name: "antdUI",
+					priority: 100,
+					test: /(antd)/,
+					minChunks: 3,
+					reuseExistingChunk: true
+				}
+			}
+		}
+	},
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: __dirname,
-			manifest: path.resolve(__dirname, `../public/${config.common.sourcePrefix}/vendor/vendor_manifest.json`)
+			manifest: path.resolve(__dirname, "../public/vendor/vendor_manifest.json")
 		}),
 		new webpack.DefinePlugin({
 			"process.env": JSON.stringify(process.env)
@@ -30,13 +43,16 @@ module.exports = {
 	],
 	output: {
 		path: config.build.assetsRoot,
-		filename: config.common.sourcePrefix + "/[name].[hash].js"
+		filename: "[name].[hash].js"
 	},
 	resolve: {
 		extensions: [".js", ".json"],
 		alias: {
 			"@": resolve("src")
 		}
+	},
+	externals: {
+
 	},
 	module: {
 		rules: [
@@ -52,6 +68,7 @@ module.exports = {
 				use: [
 					devMode ? "style-loader" : MiniCssExtractPlugin.loader,
 					"css-loader"
+					// 'postcss-loader'
 				]
 			},
 			{
@@ -64,10 +81,14 @@ module.exports = {
 						options: {
 							javascriptEnabled: true,
 							modules: true,
-							localIndexName: "[name]__[local]___[hash:base64:5]",
-							modifyVars: path.resolve(__dirname, "../src/common/theme.js")
+							localIndexName: "[name]__[local]___[hash:base64:5]"
+							// modifyVars: {
+							// 	hack: 'true; @import "~@tntd/antd-cover/tnt.less";'
+							// 	// hack: 'true; @import \'~@/theme.less\';'
+							// }
 						}
 					}
+					// 'postcss-loader'
 				]
 			},
 			{

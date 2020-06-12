@@ -1,36 +1,33 @@
 const path = require("path");
-const assetsPublicPath = "/";
-const PORT = process.env.PORT || 8001;
-const sourcePrefix = "lb-resource";
-const publicPath = "/lb-resource/";
+const PORT = process.env.PORT || 8000;
 
 module.exports = {
 	common: {
 		htmlTemplatePath: path.resolve(__dirname, "../src/index.html"),
-		sourcePrefix: sourcePrefix
+		dllPath: path.resolve(__dirname, "../public/vendor")
 	},
 	dev: {
 		hot: true,
-		assetsSubDirectory: sourcePrefix + "/static",
-		assetsPublicPath,
-		// proxyTable: {
-		// 	"/creditApi": {
-		// 		"target": "http://10.57.17.87:8099",
-		// 		"changeOrigin": true,
-		// 		"pathRewrite": {
-		// 			"^/creditApi": "/api"
-		// 		}
-		// 	}
-		// },
+		assetsSubDirectory: "static",
+		assetsPublicPath: "/",
+		proxyTable: {
+			"/mock": {
+				"target": "http://127.0.0.1:7001",
+				"changeOrigin": true,
+				"pathRewrite": {
+					"^/mock": "/mock"
+				}
+			}
+		},
+		host: "0.0.0.0",
 		port: PORT,
 		autoOpenBrowser: true,
-		devtool: "eval-source-map",
-		publicPath: publicPath
+		devtool: "eval-source-map"
 	},
 	build: {
 		assetsRoot: path.resolve(__dirname, "../dist"),
-		assetsSubDirectory: sourcePrefix + "/static",
-		assetsPublicPath,
+		assetsSubDirectory: "static",
+		assetsPublicPath: "/static-liubo/",
 		devtool: "source-map"
 	}
 };

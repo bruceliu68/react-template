@@ -1,6 +1,7 @@
 import Loadable from "react-loadable";
+import Home from "@/pages/Home/model";
 
-const MyLoadingComponent = ({ isLoading, error }) => {
+const Loading = ({ isLoading, error }) => {
 	if (isLoading) {
 		// return <div>Loading...</div>;
 		return null;
@@ -11,17 +12,22 @@ const MyLoadingComponent = ({ isLoading, error }) => {
 	}
 };
 
-const AsyncHome = Loadable({
-	loader: () => import("@/pages/Home"),
-	loading: MyLoadingComponent
-});
-
-const AsyncComponent = Loadable({
-	loader: () => import("@/pages/Component"),
-	loading: MyLoadingComponent
-});
+const dynamic = (loader) => {
+	return Loadable({
+		loader,
+		loading: Loading
+	});
+};
 
 export const routes = [
-	{ path: "/", component: AsyncHome, exact: true },
-	{ path: "/component", component: AsyncComponent }
+	{
+		path: "/",
+		exact: true,
+		component: dynamic(() => import("@/pages/Home")),
+		model: { home: Home }
+	},
+	{
+		path: "/page1",
+		component: dynamic(() => import("@/pages/Page1"))
+	}
 ];

@@ -1,4 +1,3 @@
-const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
@@ -6,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+// const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 const baseWebpackConfig = require("./webpack.base.conf");
 const config = require("./config");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -14,10 +13,10 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = merge(baseWebpackConfig, {
 	mode: "production",
 	output: {
-		chunkFilename: config.common.sourcePrefix + "/[name].[chunkhash:8].js",
+		chunkFilename: "[name].[chunkhash:8].js",
 		publicPath: config.build.assetsPublicPath
 	},
-	devtool: config.build.devtool,
+	devtool: "source-map",
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
@@ -37,12 +36,12 @@ module.exports = merge(baseWebpackConfig, {
 			}),
 			new OptimizeCSSAssetsPlugin({
 				cssProcessor: {
-					process: function(css) {
+					process: function (css) {
 						return require("cssnano")
 							.process(css, {
 								/* options */
 							})
-							.then(function(cssnanoResult) {
+							.then(function (cssnanoResult) {
 								return require("autoprefixer").process(cssnanoResult); // Assuming mqpacker is similar to cssnano interface
 							});
 					},
@@ -53,19 +52,16 @@ module.exports = merge(baseWebpackConfig, {
 	},
 	plugins: [
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-en|en-us/),
-		// new CleanWebpackPlugin(["*"], {
-		// 	root: path.resolve(__dirname, "../dist/"),
-		// 	verbose: true,
-		// 	dry: false
-		// }),
 		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
-			filename: config.common.sourcePrefix + "/index.html",
+			filename: "index.html",
 			template: config.common.htmlTemplatePath,	// 配置html模板的地址
-			chunksSortMode: "none"
+			chunksSortMode: "none",
+			dllPath: `${config.build.assetsPublicPath}vendor`,
+			publicPath: config.build.assetsPublicPath
 		}),
 		new MiniCssExtractPlugin({
-			filename: config.common.sourcePrefix + "/[name].[chunkhash:8].css"
+			filename: "[name].[chunkhash:8].css"
 		}),
 		new CopyPlugin([
 			{
